@@ -55,7 +55,7 @@ $bubble-margin: rem-calc(30px);
 
 #button1, #button2, #button3 {
     // The large-screen h1 font size
-    font-size: rem-calc(map-get(map-get($header-sizes, medium), h1));
+    font-size: rem-calc(map-get(map-get(map-get($header-styles, medium), h1),'font-size'));
 }
 
 #face-wrapper {
