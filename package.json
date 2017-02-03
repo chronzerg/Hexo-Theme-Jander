@@ -8,7 +8,7 @@
     "dominate-filter-pages": "^3.0.2",
     "dominate-filter-search": "^2.0.1",
     "dominate-io-dom": "^2.0.1",
-    "foundation-sites": "^6.2.1",
+    "foundation-sites": "6.2.x",
     "fuse.js": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
