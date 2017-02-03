@@ -7,15 +7,15 @@ var pageModules = {
     search: [require('./search')]
 };
 
-module.exports = function () {
+module.exports = function (globals) {
     var page = $('body').attr('data-page');
     if (page && pageModules[page]) {
         pageModules[page].forEach(function (initModule) {
-            initModule();
+            initModule(globals);
         });
     }
 
     if (page !== 'search') {
-        require('./searchAll')();
+        require('./searchAll')(globals);
     }
 };

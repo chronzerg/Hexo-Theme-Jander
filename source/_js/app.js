@@ -1,33 +1,48 @@
 var $ = require('jquery');
-var dominate = require('./dominate/dominate');
-var DSearch = require('./dominate/dominate-search');
-var DPages = require('./dominate/dominate-pages');
+var Dominate = require('dominate-core');
+var DIoDom = require('dominate-io-dom'); 
+var DSearch = require('dominate-filter-search');
+var DPages = require('dominate-filter-pages');
+
+var globals = {
+	filters: {}
+};
 
 $(function () {
+	// Setup Dominate
     $('.posts').each(function () {
         var hasSearch = Boolean($(this).find('.posts-search').length);
         var hasPages = Boolean($(this).find('.posts-pages').length);
 
         if (hasSearch || hasPages) {
-            var d = dominate($(this).find('.posts-list'));
+			var io = DIoDom($(this).find('.posts-list'), $);
+            var d = new Dominate(io.inputNode, io.outputNode);
 
             if (hasSearch) {
-                d.addFilter(DSearch, {
-                    $input: $(this).find('.posts-search')
-                }, false);
+                var info = d.addFilter(DSearch, {
+					descClass: 'data',
+					descAttr: 'data-value',
+                    $input: $(this).find('.posts-search'),
+					$: $
+                });
+				globals.filters.search = info;
             }
 
             if (hasPages) {
-                d.addFilter(DPages, {
+                var info = d.addFilter(DPages, {
                     $prev: $(this).find('.posts-prev'),
                     $next: $(this).find('.posts-next'),
-                    $indexes: $(this).find('.posts-indexes')
-                }, false);
+					indexes: {
+						$container: $(this).find('.posts-indexes'),
+						classes: ['button'],
+						otherClass: 'hollow'
+					}
+                });
+				globals.filters.pages = info;
             }
-
-            d.update();
         }
     });
 
-    require('./loader')();
+	// Run page specific code...
+    require('./loader')(globals);
 });
