@@ -12,13 +12,21 @@
     text-align: center;
 
     @include breakpoint(medium) {
+		// Default alignment for desktop size.
         text-align: unset;
     }
 
     &.l-home {
+		// Keep the top-bar centered on the home screen
+		// even when we are at desktop size.
         text-align: center;
     }
 }
+
+// This is a magic number which causes the string
+// "janderland" to fit within the page if the string's
+// font-size is set to "#{$title-size}vw".
+$title-size: 17;
 
 #top-bar-title {
     color: $primary;
@@ -27,9 +35,22 @@
     margin-bottom: 0;
 
     .l-home & {
+		// Add alpha so we can see the text-shadow effect below.
         color: rgba($primary, 0.8);
+
+		// Make the text look debossed
         text-shadow: 1px 4px 6px #def, 0 0 0 #000, 1px 4px 6px #def;
-        font-size: 4rem;
+
+		// See the explanation of $title-size above.
+		font-size: #{$title-size}vw;
+
+		@include breakpoint(medium) {
+			// This sets the font-size to "#{$title-size}vw" when the window
+			// is at medium size. In other words, this rule will cause the
+			// font-size to rename constant after the window reaches medium
+			// size.
+			font-size: $title-size * map-get($breakpoints, medium) / 100;
+		}
     }
 }
 
@@ -52,19 +73,38 @@
 $face-width:    rem-calc(250px);
 $bubble-width:  rem-calc(150px);
 $bubble-margin: rem-calc(30px);
+$smaller: rem-calc(420px);
 
 #button1, #button2, #button3 {
     // The large-screen h1 font size
     font-size: rem-calc(map-get(map-get($header-sizes, medium), h1));
+
+	// Moves the text in the buttons to below the icon when the
+	// screen gets smaller than $smaller width;
+	@media screen and (max-width: $smaller) {
+		i {
+			display: block;
+			clear: both;
+		}
+	}
 }
 
 #face-wrapper {
     text-align: center;
 
+	// Space the face away from the buttons and "New Stuff" callout.
+	margin-top: 10px;
+	margin-bottom: 10px;
+
     @include breakpoint(medium) {
+		// Expand the width of the #face-wrapper to allow the #bubble
+		// to move up to the left next to the #face.
+        width: $face-width+$bubble-width+$bubble-margin;
+
+		// Position the #face-wrapper so that the #face is centered on
+		// screen.
         position: relative;
         left: 50%;
-        width: $face-width+$bubble-width+$bubble-margin;
         margin-left: -($bubble-width+$bubble-margin+($face-width/2));
     }
 }
@@ -73,6 +113,7 @@ $bubble-margin: rem-calc(30px);
     width: $face-width;
 
     @include breakpoint(medium) {
+		// Allow the #bubble to move up next to the #face.
         float: right;
     }
 }
@@ -85,9 +126,20 @@ $bubble-margin: rem-calc(30px);
     border-width: rem-calc(3px);
     padding: 0.3rem;
 
+	@media screen and (max-width: $smaller) {
+		width: 100%;
+	}
+
     @include breakpoint(medium) {
+		// Give #bubble a defined width so we can easily calculate the
+		// required width of #face-wrapper.
         width: $bubble-width;
+
+		// Only apply the margin to the right side since there are no
+		// elements on the left.
         margin-right: $bubble-margin;
+
+		// Allow the #bubble to float up next to the #face.
         float: right;
     }
 }
